@@ -7,11 +7,12 @@ const cors = require('cors');
 
 const port = process.env.PORT || 5000;
 const app = express();
-const server = http.createServer(app);
-
+app.use(cors());
 connectToDB();
 app.use(express.json());
-app.use(cors());
+
+const server = http.createServer(app);
+
 
 
 //For admin mode
