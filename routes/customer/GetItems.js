@@ -5,14 +5,15 @@ const Items = require('../../models/Items');
 
 //GET, "/api/customer/getitem"
 router.get('/', Fetchuser, async(req, res)=>{
-    console.log(req.query)
+    var success = false;
     try{
         const items = await Items.find({user:user.id}).select('-user');
-        res.status(200).json(items);
+        success = true;
+        res.status(200).json({success, items});
     } 
     catch(error){
-        console.log(error);
-        return res.status(500).json({error});
+        success = false;
+        return res.status(500).json({success, error});
     }
 })
 
