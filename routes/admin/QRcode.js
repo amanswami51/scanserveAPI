@@ -13,7 +13,7 @@ router.get('/', async(req, res)=>{
     try{
         var qrCodeArr = []; 
         for(let table=1; table<=totalqrcode; table++){
-            const websiteLink = `${url}/:${table}/:${token}`;
+            const websiteLink = `${url}/${table}/${token}`;
             const x = await qrcode.toDataURL(websiteLink)
             qrCodeArr.push(x);
         } 
