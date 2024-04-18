@@ -1,20 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const qrcode = require('qrcode');
-const Fetchuser = require('../../middleware/Fetchuser');
 
 
 // '/api/qrcode' route
-router.get('/', Fetchuser, async(req, res)=>{
+router.get('/', async(req, res)=>{
 
     const url = req.header('url');   // const url = 'https://scanserve-88.web.app/user/menufirstpage';
     const totalqrcode = req.header('totalqrcode');
-    const userId = user.id;
+    const token = req.header('token');
 
     try{
         var qrCodeArr = []; 
         for(let table=1; table<=totalqrcode; table++){
-            const websiteLink = `${url}/:${table}/:${userId}`;
+            const websiteLink = `${url}/:${table}/:${token}`;
             const x = await qrcode.toDataURL(websiteLink)
             qrCodeArr.push(x);
         } 
