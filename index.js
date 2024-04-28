@@ -8,6 +8,7 @@ const cors = require('cors');
 const port = process.env.PORT || 5000;
 const app = express();
 app.use(cors({origin:"https://scanserve-88.web.app", credentials:true}));
+// app.use(cors({origin:"http://localhost:3000", credentials:true}));
 connectToDB();
 app.use(express.json());
 
