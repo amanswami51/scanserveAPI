@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const User = require("../../models/User");
+const Owner = require("../../models/Owner");
 const bcrypt = require('bcryptjs');
 const {body, validationResult} = require('express-validator');
 const jwt = require('jsonwebtoken');
-const Fetchuser = require('../../middleware/Fetchuser');
 
 
-//POST, "/api/auth/register"
+//POST, "/api/owner/auth/register"
 router.post('/register',[body('name', 'Enter valid name').isLength({min:3}),
     body('email', 'Enter valid email').isEmail(),
     body('password', 'Enter strong password').isLength({min:5})], 
@@ -20,7 +19,7 @@ router.post('/register',[body('name', 'Enter valid name').isLength({min:3}),
             }
 
             //find the user if already exists
-            let user = await User.findOne({email:req.body.email});
+            let user = await Owner.findOne({email:req.body.email});
             var success = false;
             if(user){
                 return res.status(400).json({success, error:"Email already exists"});
@@ -31,7 +30,7 @@ router.post('/register',[body('name', 'Enter valid name').isLength({min:3}),
             const securePassword = await bcrypt.hash(req.body.password, salt);
 
             //create new user
-            user = await User.create({
+            user = await Owner.create({
                 name:req.body.name,
                 email:req.body.email,
                 password:securePassword
@@ -43,9 +42,9 @@ router.post('/register',[body('name', 'Enter valid name').isLength({min:3}),
                     id:user.id
                 }
             }
-            const token = jwt.sign(data, process.env.JWT_SECRET);
+            const ownerToken = jwt.sign(data, process.env.JWT_SECRET);
             success = true;
-            return res.status(200).json({success, token})
+            return res.status(200).json({success, ownerToken})
         } 
         catch(error){
             console.log(error);
@@ -54,7 +53,7 @@ router.post('/register',[body('name', 'Enter valid name').isLength({min:3}),
         }
 })
 
-//POST, "/api/auth/login"
+//POST, "/api/owner/auth/login"
 router.post('/login', [body('email', 'Enter valid email').isEmail(),
     body('password', 'Enter strong password').isLength({min:5})], 
     async(req, res)=>{
@@ -66,7 +65,7 @@ router.post('/login', [body('email', 'Enter valid email').isEmail(),
             }
             
             //find the user before loged in
-            let user = await User.findOne({email:req.body.email});
+            let user = await Owner.findOne({email:req.body.email});
             var success = false;
             if(!user){
                 return res.status(400).json({success, error:"Please try to login with correct crendentials"});
@@ -84,9 +83,9 @@ router.post('/login', [body('email', 'Enter valid email').isEmail(),
                     id:user.id
                 }
             }
-            const token = jwt.sign(data, process.env.JWT_SECRET);
+            const ownerToken = jwt.sign(data, process.env.JWT_SECRET);
             success = true;
-            return res.status(200).json({success, token})
+            return res.status(200).json({success, ownerToken})
         } 
         catch(error){
             console.log(error);
@@ -94,28 +93,6 @@ router.post('/login', [body('email', 'Enter valid email').isEmail(),
             return res.status(500).json({success, error})
         }
 
-})
-
-//Get user Information
-//method: GET, Route: "/api/auth/user"
-router.get('/user', Fetchuser, async(req, res)=>{
-    try {
-        const userInfo = await User.findOne({_id:user.id}).select("-password -_id").sort("-date");
-        res.status(200).json({success:true, userInfo});
-    }
-    catch(error){
-        return res.status(400).json({success:false, error})
-    }
-})
-
-//POST, "/api/auth/forgetpassword"
-router.post('/forgetpassword', (req, res)=>{
-    res.status(200).json({success:"POST method is call, /api/auth/forgetpassword"})
-})
-
-//POST, "/api/auth/changepassword"
-router.post('/changepassword', (req, res)=>{
-    res.status(200).json({success:"POST method is call, /api/auth/changepassword"})
 })
 
 

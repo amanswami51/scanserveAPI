@@ -8,8 +8,8 @@ const Razorpay = require('razorpay');
 
 const port = process.env.PORT || 5000;
 const app = express();
-app.use(cors({origin:"https://scanserve-88.web.app", credentials:true}));
-// app.use(cors({origin:"http://localhost:3000", credentials:true}));
+// app.use(cors({origin:"https://scanserve-88.web.app", credentials:true}));
+app.use(cors({origin:"http://localhost:3000", credentials:true}));
 connectToDB();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -35,6 +35,10 @@ app.use('/api/customer', require('./routes/customer/Payment')) //Handle payment 
 
 //For Chef
 app.use('/api/admin/chef', require('./routes/chef/SimilarItems'))
+
+//For owner
+app.use('/api/owner/auth', require('./routes/owner/authentication'));
+app.use('/api/owner/get/allUserInfo', require('./routes/owner/getAllUserInfo'));
 
 
 server.listen(port, ()=>{
