@@ -28,46 +28,4 @@ router.post('/', Fetchuser, async(req, res) =>{
     }
 });
 
-//get order for showing on the admin/dashboard.
-//GET, "/api/admin/addmenu"
-router.get('/', Fetchuser, async(req, res)=>{
-    var success = false;
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth() + 1;
-    const day = currentDate.getDate();
-    const startOfDay = new Date(year, month - 1, day, 0, 0, 0); 
-    const endOfDay = new Date(year, month - 1, day, 23, 59, 59);
-    try{
-        const queryArray = [
-            {
-                $match:{
-                    user:new mongoose.Types.ObjectId(user.id)
-                }
-            },
-            {
-                $match:{
-                    date:{$gte:startOfDay, $lte:endOfDay}
-                }
-            },
-            { 
-                $project:{ 
-                    user: 0 
-                } 
-            }
-        ]
-        const orders = await Cart.aggregate((queryArray)).sort('-date');
-        success = true;
-        res.status(200).json({success, orders});
-
-    } 
-    catch(error){
-        success = false;
-        console.log(error);
-        return res.status(500).json({success, error});
-    }
-})
-
-  
-
 module.exports = router;

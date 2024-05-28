@@ -23,18 +23,19 @@ const instance = new Razorpay({
 module.exports = instance;
 
 //For admin mode
-app.use('/api/qrcode', require('./routes/admin/QRcode')) //done
-app.use('/api/auth', require('./routes/admin/Authentication')) //done
-app.use('/api/admin/addmenu', require('./routes/admin/Addmenu')) //done
-app.use('/api/admin/dashboard', require('./routes/admin/Dashboard'))
+app.use('/api/auth', require('./routes/admin/Authentication'))//Login the admin
+app.use('/api/admin/addmenu', require('./routes/admin/Addmenu')) //CRUD on menu Items
+app.use('/api/qrcode', require('./routes/admin/QRcode')) //Create and get qrcode
+app.use('/api/admin/getOrders', require('./routes/admin/GetOrders')) //get orders for showing on admin pannel
 
 //For Customer
 app.use('/api/customer/getitem', require('./routes/customer/GetItems')) //Get items for customer page
-app.use('/api/customer/orders', require('./routes/customer/Orders')) //Handle order
+app.use('/api/customer/orders', require('./routes/customer/Orders')) //Placed new order from customer
 app.use('/api/customer', require('./routes/customer/Payment')) //Handle payment routes
 
 //For Chef
 app.use('/api/admin/chef', require('./routes/chef/SimilarItems'))
+
 
 server.listen(port, ()=>{
     console.log('server running successfully')
